@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Refibench: term sheet comparison</title>
+<meta name="description" content="Refibench (working name) is a prototype for small UK commercial property debt advisers and finance brokers: compare lender term sheets side by side, with every value linked to its source text, and size a loan. Early prototype on sample data; no customers yet.">
+<meta name="color-scheme" content="light dark">
+<style>
+  :root {
+    --paper: #f6f7f5;
+    --surface: #ffffff;
+    --ink: #142038;
+    --ink-soft: #46546a;
+    --rule: #d3d9e0;
+    --rule-strong: #a9b3bf;
+    --marker: #f3d54a;
+    --marker-ink: #142038;
+    --marker-soft: #fbefb0;
+    --link: #1d4ed8;
+    --focus: #1d4ed8;
+    --sans: "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --measure: 66ch;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0e1626;
+      --surface: #152036;
+      --ink: #e7ebf1;
+      --ink-soft: #a8b3c4;
+      --rule: #2a3750;
+      --rule-strong: #46546e;
+      --marker: #e8c93c;
+      --marker-ink: #142038;
+      --marker-soft: #3d3816;
+      --link: #93b4ff;
+      --focus: #93b4ff;
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+  a { color: var(--link); text-underline-offset: 0.18em; }
+  a:focus-visible, button:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 32px; } }
+
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { left: 16px; top: 12px; background: var(--surface); padding: 8px 12px; z-index: 10; }
+
+  /* Header */
+  .masthead { border-bottom: 1px solid var(--rule); }
+  .masthead .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 18px; padding-bottom: 18px; }
+  .wordmark { font-weight: 700; font-size: 1.25rem; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 10px; }
+  .wordmark svg { flex: none; }
+  .status-pill { font-size: 0.875rem; color: var(--ink-soft); }
+
+  /* Buttons */
+  .cta {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 14px 22px;
+    border-radius: 6px;
+    text-decoration: none;
+    border: 2px solid var(--ink);
+  }
+  .cta:hover { background: transparent; color: var(--ink); }
+
+  /* Hero */
+  .hero { padding: 56px 0 64px; }
+  .hero-grid { display: grid; gap: 40px; }
+  @media (min-width: 920px) { .hero-grid { grid-template-columns: 1.1fr 0.9fr; align-items: center; gap: 56px; } }
+  h1 {
+    font-size: clamp(2.1rem, 5.2vw, 3.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+    margin: 0 0 22px;
+    max-width: 16ch;
+  }
+  .lede { font-size: 1.2rem; color: var(--ink-soft); max-width: 44ch; margin: 0 0 30px; }
+  .hero-note { font-size: 0.9375rem; color: var(--ink-soft); margin: 18px 0 0; }
+
+  /* Provenance specimen (hero) */
+  .specimen { margin: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 22px; position: relative; }
+  .specimen-cap { font-size: 0.8125rem; color: var(--ink-soft); margin: 0 0 14px; }
+  .clause { font-family: var(--serif); font-size: 1.02rem; line-height: 1.7; margin: 0; padding: 0 0 18px; border-bottom: 1px dashed var(--rule-strong); }
+  .clause-ref { display: block; font-family: var(--sans); font-size: 0.8125rem; color: var(--ink-soft); margin-bottom: 6px; }
+  mark { background: var(--marker); color: var(--marker-ink); padding: 0.05em 0.2em; border-radius: 2px; }
+  .extracted { display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; padding-top: 16px; font-size: 0.9375rem; }
+  .extracted dt { color: var(--ink-soft); }
+  .extracted dd { margin: 0; font-weight: 600; text-align: right; }
+  .extracted dd span { box-shadow: inset 0 -0.45em 0 var(--marker-soft); }
+
+  /* Sections */
+  section { padding: 64px 0; border-top: 1px solid var(--rule); }
+  h2 { font-size: clamp(1.6rem, 3.4vw, 2.25rem); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 18px; max-width: 26ch; }
+  h3 { font-size: 1.25rem; line-height: 1.25; margin: 0 0 10px; letter-spacing: -0.01em; }
+  p { margin: 0 0 16px; max-width: var(--measure); }
+  .muted { color: var(--ink-soft); }
+
+  /* Problem */
+  .problem-grid { display: grid; gap: 36px; }
+  @media (min-width: 920px) { .problem-grid { grid-template-columns: 1fr 1fr; gap: 64px; } }
+  .figures { margin: 0; padding: 0; list-style: none; display: grid; gap: 22px; }
+  .figures li { border-left: 4px solid var(--marker); padding: 4px 0 4px 18px; }
+  .figures strong { display: block; font-size: clamp(1.7rem, 4vw, 2.3rem); line-height: 1.1; letter-spacing: -0.02em; }
+  .figures span { color: var(--ink-soft); }
+  .source { font-size: 0.875rem; color: var(--ink-soft); margin-top: 18px; }
+
+  /* Modules */
+  .module { display: grid; gap: 28px; padding: 40px 0; border-top: 1px solid var(--rule); }
+  .module:first-of-type { border-top: 0; padding-top: 8px; }
+  @media (min-width: 920px) { .module { grid-template-columns: 0.8fr 1.2fr; gap: 56px; } }
+  .module .kicker { font-size: 0.9375rem; color: var(--ink-soft); margin: 0 0 6px; }
+  .gets { margin: 14px 0 0; padding-left: 1.1em; }
+  .gets li { margin-bottom: 6px; max-width: 60ch; }
+
+  /* Mock-up frame */
+  .mock { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; min-width: 0; }
+  .mock-label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; padding: 10px 14px; font-size: 0.8125rem; color: var(--ink-soft); border-bottom: 1px solid var(--rule); background: var(--paper); }
+  .mock-label b { color: var(--ink); font-weight: 600; }
+  .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.875rem; }
+  caption { text-align: left; padding: 10px 14px 0; font-size: 0.8125rem; color: var(--ink-soft); }
+  th, td { padding: 9px 12px; border-bottom: 1px solid var(--rule); text-align: right; white-space: nowrap; }
+  thead th { font-weight: 600; vertical-align: bottom; border-bottom: 1px solid var(--rule-strong); }
+  tbody th { text-align: left; font-weight: 500; color: var(--ink-soft); }
+  thead th:first-child { text-align: left; }
+  td button {
+    font: inherit; color: inherit; background: none; border: 0; padding: 2px 4px; margin: -2px -4px;
+    cursor: pointer; border-radius: 3px; text-decoration: underline dotted var(--rule-strong); text-underline-offset: 0.25em;
+  }
+  td button:hover { background: var(--marker-soft); }
+  td button[aria-pressed="true"] { background: var(--marker); color: var(--marker-ink); text-decoration: none; }
+  .rank { display: inline-block; min-width: 1.6em; font-size: 0.75rem; color: var(--ink-soft); }
+  tr.best td:not(:empty) { font-weight: 600; }
+  .source-panel { border-top: 1px solid var(--rule); padding: 14px; font-size: 0.9375rem; min-height: 6.5em; }
+  .source-panel .from { font-size: 0.8125rem; color: var(--ink-soft); margin: 0 0 6px; }
+  .source-panel blockquote { margin: 0; font-family: var(--serif); line-height: 1.65; }
+
+  .sizing { padding: 14px; display: grid; gap: 10px; font-size: 0.9375rem; }
+  .sizing-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--rule); }
+  .sizing-row:last-child { border-bottom: 0; }
+  .sizing-row .calc { display: block; font-size: 0.8125rem; color: var(--ink-soft); }
+  .sizing-row .amt { font-weight: 600; }
+  .sizing-row.binding .amt { background: var(--marker); color: var(--marker-ink); padding: 0 6px; border-radius: 3px; }
+  .inputs { font-size: 0.8125rem; color: var(--ink-soft); margin: 0; }
+
+  /* Trust */
+  .trust-list { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 0; }
+  @media (min-width: 720px) { .trust-list { grid-template-columns: 1fr 1fr; column-gap: 56px; } }
+  .trust-list li { padding: 20px 0; border-top: 1px solid var(--rule); }
+  .trust-list p { margin: 0; color: var(--ink-soft); }
+
+  /* Pricing */
+  .plans { display: grid; gap: 0; margin-top: 28px; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; background: var(--surface); }
+  .plans { max-width: 440px; }
+  .plan { padding: 26px 22px; border-top: 1px solid var(--rule); }
+  .plan:first-child { border-top: 0; }
+  @media (min-width: 820px) { .plan { border-top: 0; border-left: 1px solid var(--rule); } .plan:first-child { border-left: 0; } }
+  .plan h3 { margin-bottom: 4px; }
+  .plan .who { color: var(--ink-soft); font-size: 0.9375rem; margin: 0 0 18px; }
+  .price { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin: 0; }
+  .per { color: var(--ink-soft); font-size: 0.9375rem; margin: 4px 0 0; }
+  .plan.lead { background: linear-gradient(var(--marker), var(--marker)) top / 100% 4px no-repeat; }
+  .phase { font-size: 0.875rem; color: var(--ink-soft); margin: 12px 0 0; }
+
+  /* Status + founder */
+  .status-block { display: grid; gap: 36px; }
+  @media (min-width: 920px) { .status-block { grid-template-columns: 1fr 1fr; gap: 64px; } }
+  .founder { font-family: var(--serif); font-size: 1.15rem; line-height: 1.7; margin: 0; max-width: 52ch; }
+
+  .access { text-align: left; }
+  .access p { max-width: 54ch; }
+
+  footer { border-top: 1px solid var(--rule); padding: 32px 0 48px; font-size: 0.9375rem; color: var(--ink-soft); }
+  footer p { margin: 0 0 8px; }
+  footer strong { color: var(--ink); font-weight: 600; }
+
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="wordmark" href="#top" aria-label="Refibench, back to top">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+        <rect x="1" y="1" width="24" height="24" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
+        <line x1="9.5" y1="1" x2="9.5" y2="25" stroke="currentColor" stroke-width="2"/>
+        <rect x="11.5" y="10" width="11.5" height="6" fill="#f3d54a"/>
+      </svg>
+      Refibench
+    </a>
+    <span class="status-pill">Working name · prototype</span>
+  </div>
+</header>
+
+<main id="main">
+  <div class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>Every term sheet on one grid, every figure traced to its source.</h1>
+        <p class="lede">Refibench is a prototype for small UK commercial property debt advisers and finance brokers working on deals of roughly £5M to £50M. Compare lender term sheets side by side, with every value linked to its source text, and size the loan with plain arithmetic.</p>
+        <a class="cta" data-cta href="#access">Talk to us about your process</a>
+        <p class="hero-note">Early prototype on fictional sample data. No customers yet: we are starting with conversations with advisers.</p>
+      </div>
+
+      <figure class="specimen" aria-labelledby="specimen-cap">
+        <p class="specimen-cap" id="specimen-cap">Illustration with sample data: one clause from an invented term sheet, and what Refibench extracts from it.</p>
+        <p class="clause">
+          <span class="clause-ref">Sample Bank A, indicative terms, clause 4.2</span>
+          The Margin shall be <mark>2.85 per cent. per annum</mark> over <mark>Compounded SONIA</mark>, and the Borrower shall pay an arrangement fee of <mark>1.00 per cent.</mark> of the Facility on first drawdown.
+        </p>
+        <dl class="extracted">
+          <dt>Margin</dt><dd><span>2.85%</span></dd>
+          <dt>Reference rate</dt><dd><span>SONIA</span></dd>
+          <dt>Arrangement fee</dt><dd><span>1.00%</span></dd>
+        </dl>
+      </figure>
+    </div>
+  </div>
+
+  <section aria-labelledby="problem-h">
+    <div class="wrap problem-grid">
+      <div>
+        <h2 id="problem-h">A refinancing comes back as a stack of term sheets.</h2>
+        <p>Term sheets arrive in different formats: margin in one clause, the ICR covenant in a schedule, the cash trap in a footnote. If your firm still rebuilds the comparison grid in a spreadsheet, a single misread covenant or fee can reach the client.</p>
+        <p>Larger firms can buy enterprise platforms for this, such as Leverest, Termgrid and FinLoop. We are testing whether smaller firms want something simpler and cheaper. That is a hypothesis, and we want to hear from you whether it holds.</p>
+        <p>Smart Bricks, an AI platform for real estate built first for investment firms, also offers agents for lenders and advisers; it raised a $5M pre-seed round led by a16z speedrun and reports a ~$12M revenue run-rate (company-reported). Its pages do not state term-sheet comparison for debt advisers. Sources: <a href="https://smart-bricks.com/platform" target="_blank" rel="noopener noreferrer">Smart Bricks platform<span class="visually-hidden"> (opens in a new tab)</span></a>, <a href="https://smart-bricks.com/news" target="_blank" rel="noopener noreferrer">news<span class="visually-hidden"> (opens in a new tab)</span></a>, <a href="https://speedrun.a16z.com/companies/smart-bricks" target="_blank" rel="noopener noreferrer">a16z speedrun profile<span class="visually-hidden"> (opens in a new tab)</span></a>.</p>
+      </div>
+      <div>
+        <ul class="figures">
+          <li><strong>About £33B</strong><span>of UK commercial real estate loans, about 19% of the roughly £174B outstanding, was due to mature in 2026. The debt being refinanced (problem size, not our revenue).</span></li>
+          <li><strong>About 60%</strong><span>of UK commercial real estate lending in 2025 was refinancing.</span></li>
+        </ul>
+        <p class="source">Source: <a href="https://www.bayes.citystgeorges.ac.uk/news-and-events/news/2026/may/sluggish-investment-in-uk-commercial-real-estate-market-sparks-price-war-for-refinancing-loans" target="_blank" rel="noopener noreferrer">Bayes Business School, UK Commercial Real Estate Lending Report, May 2026<span class="visually-hidden"> (opens in a new tab)</span></a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="modules-h">
+    <div class="wrap">
+      <h2 id="modules-h">What the prototype does today.</h2>
+      <p class="muted">Term-sheet comparison leads. The prototype runs on fictional sample data; it is not yet a product you can buy.</p>
+
+      <article class="module" aria-labelledby="m1">
+        <div>
+          <p class="kicker">Compare</p>
+          <h3 id="m1">Term Sheet Grid</h3>
+          <p>Paste or upload the term sheets received on a deal. Refibench puts them into one side-by-side comparison.</p>
+          <ul class="gets">
+            <li>Margin, reference rate, all-in cost, fees, term and amortisation.</li>
+            <li>LTV, ICR/DSCR and debt-yield covenants, cash trap, hedging requirement and prepayment terms.</li>
+            <li>The source text behind every extracted value.</li>
+            <li>A ranked grid and a draft memo for adviser review.</li>
+          </ul>
+          <p class="muted" style="margin-top:14px">The ranking reflects what the term sheets say. It does not claim to know a lender's appetite. The term-sheet reader is a prototype: it flags fields it is unsure of, but it can still misread some layouts, so every value needs checking.</p>
+        </div>
+
+        <div class="mock">
+          <div class="mock-label"><b>Illustration with sample data</b><span>Lenders, terms and figures are invented.</span></div>
+          <div class="scroll" role="region" aria-label="Sample term sheet comparison grid, scrollable" tabindex="0">
+            <table>
+              <caption>Sample deal: £24.0M refinancing, assumed SONIA 4.00%. Ranked by all-in cost. Select a figure to see its source text.</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Lender</th>
+                  <th scope="col">Margin</th>
+                  <th scope="col">All-in</th>
+                  <th scope="col">Arr. fee</th>
+                  <th scope="col">Term</th>
+                  <th scope="col">Max LTV</th>
+                  <th scope="col">ICR covenant</th>
+                  <th scope="col">Cash trap</th>
+                </tr>
+              </thead>
+              <tbody id="grid-body"></tbody>
+            </table>
+          </div>
+          <div class="source-panel" id="source-panel" aria-live="polite">
+            <p class="from">Source text</p>
+            <blockquote>Select any underlined figure in the grid.</blockquote>
+          </div>
+        </div>
+      </article>
+
+      <article class="module" aria-labelledby="m2">
+        <div>
+          <p class="kicker">Size</p>
+          <h3 id="m2">Loan Sizing</h3>
+          <p>Enter or upload income and value. A deterministic engine, written as plain code and never handed to the language model, sizes the loan under LTV, ICR and debt-yield constraints at the reference rate and margin you set.</p>
+          <ul class="gets">
+            <li>The maximum loan under each constraint, and which one binds.</li>
+            <li>The refinancing gap against the existing balance.</li>
+            <li>A rate stress table.</li>
+          </ul>
+        </div>
+        <div class="mock">
+          <div class="mock-label"><b>Illustration with sample data</b><span>Invented asset and figures.</span></div>
+          <div class="sizing">
+            <p class="inputs">Net operating income £1.20M. Value £18.0M. All-in rate 6.50%, interest only. Existing balance £12.0M.</p>
+            <div class="sizing-row"><span>LTV limit 60%<span class="calc">£18.0M × 60%</span></span><span class="amt">£10.80M</span></div>
+            <div class="sizing-row binding"><span>ICR limit 1.75x (binding)<span class="calc">£1.20M ÷ 1.75 ÷ 6.50%</span></span><span class="amt">£10.55M</span></div>
+            <div class="sizing-row"><span>Debt yield floor 9.0%<span class="calc">£1.20M ÷ 9.0%</span></span><span class="amt">£13.33M</span></div>
+            <div class="sizing-row"><span>Refinancing gap<span class="calc">£12.0M existing − £10.55M</span></span><span class="amt">£1.45M</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="module" aria-labelledby="m3">
+        <div>
+          <p class="kicker">Explore</p>
+          <h3 id="m3">Maturity view (experimental)</h3>
+          <p>An experimental view of which lenders hold charges over which companies, and when each charge was registered, with an estimated maturity window.</p>
+          <p>It is shown on synthetic data only. Companies House charges record the lender and the date, not the loan amount, margin or maturity, so they are a weak maturity signal and every window shown is an estimate. It is not used for marketing to property owners.</p>
+        </div>
+        <div class="mock">
+          <div class="mock-label"><b>Illustration with synthetic data</b><span>Companies and lenders are invented.</span></div>
+          <div class="scroll" role="region" aria-label="Sample maturity radar rows, scrollable" tabindex="0">
+            <table>
+              <thead>
+                <tr><th scope="col">Company</th><th scope="col">Lender on charge</th><th scope="col">Charge registered</th><th scope="col">Estimated maturity</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Sample Property Co 001 Ltd</th><td>Sample Bank A</td><td>Mar 2021</td><td>2026 (estimate)</td></tr>
+                <tr><th scope="row">Sample Property Co 002 Ltd</th><td>Sample Debt Fund C</td><td>Sep 2022</td><td>2027 (estimate)</td></tr>
+                <tr><th scope="row">Sample Property Co 003 Ltd</th><td>Sample Credit Fund B</td><td>Jun 2021</td><td>2026 (estimate)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="trust-h">
+    <div class="wrap">
+      <h2 id="trust-h">Built to be checked, not taken on trust.</h2>
+      <p class="muted">The output goes in front of your client with your name on it, so every step can be checked.</p>
+      <ul class="trust-list">
+        <li><h3>Every figure shows its source</h3><p>Each extracted value links back to the term sheet text it came from, so you can check a margin or covenant in one click.</p></li>
+        <li><h3>Arithmetic is code, not a language model</h3><p>Loan sizing runs on a deterministic engine. The same inputs give the same answer every time, and you can follow the working.</p></li>
+        <li><h3>An adviser signs off</h3><p>Refibench informs and prepares. A human adviser reviews and decides before anything reaches a client.</p></li>
+        <li><h3>Nothing is presented as advice</h3><p>The grid, the sizing and the draft memo are analysis for professional review. Refibench does not give financial advice.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="pricing-h">
+    <div class="wrap">
+      <h2 id="pricing-h">Price we are testing</h2>
+      <p class="muted">An untested hypothesis. We will check it in conversations with advisers, and it may change.</p>
+      <div class="plans">
+        <div class="plan lead">
+          <h3>Adviser seat</h3>
+          <p class="who">For small UK commercial property debt advisers and finance brokers</p>
+          <p class="price">£299</p>
+          <p class="per">per seat per month</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="status-h">
+    <div class="wrap status-block">
+      <div>
+        <h2 id="status-h">Where Refibench is today</h2>
+        <p>A working prototype on synthetic data: every company, lender and figure in it is fictional. There are no customers, pilots or revenue yet. The next step is eight discovery calls with advisers, then three to five pilot firms.</p>
+        <p>Who we serve: today, small UK commercial property debt advisers; next, as unvalidated hypotheses, borrowers planning their own maturities and Europe; long term, every borrower, adviser and lender in real estate debt, though only the UK has been researched so far.</p>
+        <p>Later, unvalidated: a sourced knowledge and insights layer for everyone who lends or borrows in real estate: market structure, pricing context, regulation and how refinancing works, with every figure linked to its source.</p>
+      </div>
+      <div>
+        <h2 id="founder-h">Why it is being built</h2>
+        <p class="founder">Refibench's founder is an analyst in debt and structured finance at a US-headquartered real estate capital markets advisor, working on UK and European refinancings, and has compared 15 to 25 term sheets on a single deal.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="access" class="access" aria-labelledby="access-h">
+    <div class="wrap">
+      <h2 id="access-h">Help shape the first version</h2>
+      <p>If you advise on or broker UK commercial property refinancings, we would value 30 minutes on how you compare term sheets today, including the tools you already use.</p>
+      <a class="cta" data-cta href="#access">Talk to us about your process</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong>Refibench prepares analysis for professional review. It does not give financial advice.</strong></p>
+    <p>Refibench is a working name. Contact: <a href="mailto:ishaan22102210@gmail.com">ishaan22102210@gmail.com</a></p>
+  </div>
+</footer>
+
+<style>.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}</style>
+<script>
+  const CONTACT_EMAIL = "ishaan22102210@gmail.com";
+
+  (function () {
+    var subject = "Refibench: comparing term sheets";
+    var body = "Hello,\n\nI would be happy to talk about how my firm compares term sheets.\n\nFirm:\nRole:\nTypical refinancing size:\n";
+    var href = "mailto:" + CONTACT_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    document.querySelectorAll("[data-cta]").forEach(function (a) { a.setAttribute("href", href); });
+
+    // Sample term sheet grid. All lenders, clauses and figures are invented.
+    var lenders = [
+      { name: "Sample Bank A", rank: 1, cells: [
+        ["2.85%", "Clause 4.2: The Margin shall be 2.85 per cent. per annum over Compounded SONIA."],
+        ["6.85%", "Calculated: assumed SONIA 4.00% + Margin 2.85% (clause 4.2)."],
+        ["1.00%", "Clause 9.1: an arrangement fee of 1.00 per cent. of the Facility, payable on first drawdown."],
+        ["5 yrs", "Clause 2.3: the Termination Date is the fifth anniversary of the first Utilisation Date."],
+        ["60%", "Schedule 3, paragraph 1: the LTV shall not at any time exceed 60 per cent."],
+        ["1.75x", "Schedule 3, paragraph 2: Interest Cover shall not be less than 1.75:1."],
+        ["1.90x", "Clause 18.4: if Interest Cover falls below 1.90:1, excess cash shall be retained in the Blocked Account."]
+      ]},
+      { name: "Sample Credit Fund B", rank: 2, cells: [
+        ["3.10%", "Page 2: Margin: 310 bps over Compounded SONIA."],
+        ["7.10%", "Calculated: assumed SONIA 4.00% + Margin 3.10% (page 2)."],
+        ["1.50%", "Page 3: Arrangement fee: 150 bps, deducted from the first advance."],
+        ["5 yrs", "Page 1: Final repayment date: five years from financial close."],
+        ["55%", "Page 4: LTV covenant: 55%."],
+        ["2.00x", "Page 4: ICR covenant: 2.00x on a 12-month projected basis."],
+        ["None", "Page 4: No cash trap is proposed."]
+      ]},
+      { name: "Sample Debt Fund C", rank: 3, cells: [
+        ["3.40%", "Section B, Pricing: Margin of 3.40% p.a. over SONIA (floored at zero)."],
+        ["7.40%", "Calculated: assumed SONIA 4.00% + Margin 3.40% (Section B)."],
+        ["1.25%", "Section B, Fees: Arrangement fee 1.25% of the Commitment."],
+        ["3 yrs", "Section A, Term: 3 years from first drawdown, with two one-year extension options."],
+        ["65%", "Section D, Financial covenants: Maximum LTV 65%."],
+        ["1.50x", "Section D, Financial covenants: Minimum ICR 1.50x, tested quarterly."],
+        ["1.65x", "Section D: Cash sweep applies while ICR is below 1.65x."]
+      ]}
+    ];
+
+    var tbody = document.getElementById("grid-body");
+    var panel = document.getElementById("source-panel");
+    var cols = ["Margin", "All-in", "Arrangement fee", "Term", "Max LTV", "ICR covenant", "Cash trap"];
+    var current = null;
+
+    lenders.forEach(function (l) {
+      var tr = document.createElement("tr");
+      if (l.rank === 1) tr.className = "best";
+      var th = document.createElement("th");
+      th.scope = "row";
+      th.innerHTML = '<span class="rank" aria-label="Rank ' + l.rank + '">' + l.rank + '.</span>';
+      th.appendChild(document.createTextNode(l.name));
+      tr.appendChild(th);
+      l.cells.forEach(function (c, i) {
+        var td = document.createElement("td");
+        var b = document.createElement("button");
+        b.type = "button";
+        b.textContent = c[0];
+        b.setAttribute("aria-pressed", "false");
+        b.setAttribute("aria-label", l.name + ", " + cols[i] + " " + c[0] + ": show source text");
+        b.addEventListener("click", function () {
+          if (current) current.setAttribute("aria-pressed", "false");
+          b.setAttribute("aria-pressed", "true");
+          current = b;
+          panel.innerHTML = "";
+          var from = document.createElement("p");
+          from.className = "from";
+          from.textContent = l.name + ", " + cols[i] + " (sample)";
+          var q = document.createElement("blockquote");
+          q.textContent = c[1];
+          panel.appendChild(from);
+          panel.appendChild(q);
+        });
+        td.appendChild(b);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+  })();
+</script>
+</body>
+</html>
