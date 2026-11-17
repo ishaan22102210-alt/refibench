@@ -282,12 +282,12 @@
           <div class="mock-label"><b>Illustration with sample data</b><span>Lenders, terms and figures are invented.</span></div>
           <div class="scroll" role="region" aria-label="Sample term sheet comparison grid, scrollable" tabindex="0">
             <table>
-              <caption>Sample deal: £24.0M refinancing, assumed SONIA 4.00%. Ranked by all-in cost. Select a figure to see its source text.</caption>
+              <caption>Sample deal: £24.0M refinancing, assumed SONIA 4.00%. Ranked by rate (SONIA plus margin). Select a figure to see its source text.</caption>
               <thead>
                 <tr>
                   <th scope="col">Lender</th>
                   <th scope="col">Margin</th>
-                  <th scope="col">All-in</th>
+                  <th scope="col">Rate</th>
                   <th scope="col">Arr. fee</th>
                   <th scope="col">Term</th>
                   <th scope="col">Max LTV</th>
@@ -309,7 +309,7 @@
         <div>
           <p class="kicker">Size</p>
           <h3 id="m2">Loan Sizing</h3>
-          <p>Enter or upload income and value. A deterministic engine, written as plain code and never handed to the language model, sizes the loan under LTV, ICR and debt-yield constraints at the reference rate and margin you set.</p>
+          <p>Enter income and value. A deterministic engine, written as plain code and never handed to the language model, sizes the loan under LTV, ICR and debt-yield constraints at the reference rate and margin you set.</p>
           <ul class="gets">
             <li>The maximum loan under each constraint, and which one binds.</li>
             <li>The refinancing gap against the existing balance.</li>
@@ -456,7 +456,7 @@
 
     var tbody = document.getElementById("grid-body");
     var panel = document.getElementById("source-panel");
-    var cols = ["Margin", "All-in", "Arrangement fee", "Term", "Max LTV", "ICR covenant", "Cash trap"];
+    var cols = ["Margin", "Rate", "Arrangement fee", "Term", "Max LTV", "ICR covenant", "Cash trap"];
     var current = null;
 
     lenders.forEach(function (l) {
